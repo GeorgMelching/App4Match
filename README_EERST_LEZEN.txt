@@ -31,3 +31,25 @@ GitHub Pages updaten:
 Mobiel:
 - Open de GitHub Pages link op Android.
 - Chrome menu ⋮ > Toevoegen aan startscherm.
+
+
+UPDATE: IDEE DOORGEVEN-KNOP
+Toegevoegd:
+- vaste zwevende knop "+ Idee";
+- pagina "Idee doorgeven";
+- tekst plakken/typen;
+- lokaal bewaren op apparaat;
+- kopiëren voor ChatGPT;
+- delen via mobiel;
+- mailen naar app4match@gmail.com;
+- exporteren als tekstbestand.
+
+Let op:
+De huidige versie bewaart lokaal in de browser. Voor echte synchronisatie tussen mobiel, pc en overal online is later een beveiligde backend nodig.
+Aanbevolen later:
+- Supabase/Firebase database;
+- login;
+- pincode/patroon;
+- biometrische ontgrendeling via apparaat;
+- versleutelde opslag;
+- koppeling naar admin-dashboard.
