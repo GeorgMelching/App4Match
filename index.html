@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f2ef12">
+<meta name="description" content="App4Match centrale web-app: psychometrische matching, chat, beeldbellen en privacybeleid.">
+<link rel="manifest" href="manifest.webmanifest">
+<title>App4Match</title>
+<style>
+:root {
+  --yellow:#f2ef12;
+  --yellow-soft:#fffde3;
+  --yellow-soft-2:#fff9a8;
+  --black:#111111;
+  --white:#ffffff;
+  --blue-1:#eef9ff;
+  --blue-2:#d8f1ff;
+  --blue-3:#b6e5ff;
+  --blue-4:#7fd0f8;
+  --blue-5:#38aeea;
+  --line:#e5df7b;
+  --muted:#3d3d3d;
+  --shadow:0 18px 50px rgba(0,0,0,.09);
+  --radius:28px;
+}
+
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  margin:0;
+  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(circle at 10% 0%, var(--yellow-soft-2), transparent 28rem),
+    linear-gradient(180deg, var(--white), var(--yellow-soft));
+  color:var(--black);
+}
+
+button, .btn {
+  border:2px solid var(--black);
+  border-radius:999px;
+  padding:12px 18px;
+  background:var(--yellow);
+  color:var(--black);
+  font-weight:900;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+  min-height:46px;
+}
+
+button.secondary, .btn.secondary {
+  background:var(--white);
+  border-color:var(--blue-4);
+}
+
+button.dark, .btn.dark {
+  background:var(--black);
+  color:var(--white);
+}
+
+.app-shell {
+  max-width:1220px;
+  margin:0 auto;
+  padding:16px;
+}
+
+.topbar {
+  position:sticky;
+  top:10px;
+  z-index:100;
+  background:rgba(255,255,255,.92);
+  backdrop-filter: blur(12px);
+  border:1px solid var(--line);
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  padding:12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+
+.logo {
+  width:72px;
+  height:72px;
+  object-fit:contain;
+  flex:0 0 auto;
+}
+
+.brand-title {
+  margin:0;
+  font-size:clamp(28px, 4vw, 44px);
+  font-weight:1000;
+  letter-spacing:-1.6px;
+  line-height:1;
+}
+
+.brand-subtitle {
+  margin:4px 0 0;
+  font-weight:900;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.nav {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  gap:8px;
+}
+
+.nav button {
+  padding:10px 13px;
+  min-height:40px;
+  font-size:14px;
+}
+
+.mobile-tabs {
+  display:none;
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:120;
+  background:rgba(255,255,255,.96);
+  border-top:1px solid var(--line);
+  padding:8px 8px max(8px, env(safe-area-inset-bottom));
+  grid-template-columns:repeat(5,1fr);
+  gap:6px;
+}
+
+.mobile-tabs button {
+  border-radius:16px;
+  padding:8px 4px;
+  min-height:44px;
+  font-size:12px;
+  border-width:1px;
+}
+
+.page { display:none; }
+.page.active { display:block; animation:fade .18s ease; }
+@keyframes fade { from { opacity:.3; transform:translateY(4px); } to { opacity:1; transform:none; } }
+
+.panel {
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:clamp(18px, 3vw, 34px);
+  margin:16px 0;
+  box-shadow:var(--shadow);
+}
+
+.hero {
+  display:grid;
+  grid-template-columns:minmax(0, 1.1fr) minmax(320px, .9fr);
+  gap:22px;
+  align-items:center;
+  margin-top:18px;
+}
+
+.badge {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid var(--line);
+  background:var(--yellow-soft);
+  border-radius:999px;
+  padding:8px 12px;
+  font-size:14px;
+  font-weight:900;
+  margin-bottom:12px;
+}
+
+h1 {
+  margin:8px 0 16px;
+  font-size:clamp(42px, 7vw, 78px);
+  line-height:.94;
+  letter-spacing:-3px;
+}
+
+h2 {
+  margin:0 0 12px;
+  font-size:clamp(28px, 4vw, 46px);
+  line-height:1.05;
+  letter-spacing:-1.4px;
+}
+
+h3 {
+  margin:0 0 8px;
+  font-size:22px;
+}
+
+p, li {
+  color:var(--muted);
+  font-size:17px;
+  line-height:1.72;
+}
+
+.lead {
+  color:var(--black);
+  font-size:clamp(19px, 2.4vw, 24px);
+  font-weight:800;
+}
+
+.actions {
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:22px;
+}
+
+.visual-card {
+  border-radius:32px;
+  overflow:hidden;
+  background:linear-gradient(135deg, var(--blue-1), var(--white));
+  border:1px solid var(--line);
+  min-height:420px;
+  display:grid;
+  align-content:space-between;
+}
+
+.phone-preview {
+  background:var(--black);
+  color:var(--white);
+  border-radius:34px;
+  padding:12px;
+  max-width:410px;
+  margin:0 auto;
+}
+
+.phone-screen {
+  min-height:580px;
+  border-radius:25px;
+  background:var(--white);
+  color:var(--black);
+  overflow:hidden;
+}
+
+.phone-header {
+  background:var(--yellow);
+  padding:18px;
+  font-weight:1000;
+}
+
+.match-card {
+  margin:14px;
+  padding:16px;
+  border-radius:22px;
+  background:var(--blue-1);
+  border:1px solid var(--blue-3);
+}
+
+.score {
+  float:right;
+  font-size:24px;
+  font-weight:1000;
+}
+
+.progress {
+  height:12px;
+  margin:12px 0;
+  border-radius:999px;
+  background:var(--white);
+  border:1px solid var(--line);
+  overflow:hidden;
+}
+
+.progress span {
+  display:block;
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg, var(--blue-3), var(--blue-5));
+}
+
+.grid {
+  display:grid;
+  gap:14px;
+}
+
+.grid-3 { grid-template-columns:repeat(3, 1fr); }
+.grid-2 { grid-template-columns:repeat(2, 1fr); }
+
+.card {
+  background:var(--blue-1);
+  border:1px solid var(--blue-3);
+  border-radius:24px;
+  padding:20px;
+}
+
+.card:nth-child(2n) { background:var(--blue-2); }
+.card:nth-child(3n) { background:var(--white); }
+
+.step {
+  display:grid;
+  grid-template-columns:48px 1fr;
+  gap:14px;
+  padding:16px;
+  border-radius:22px;
+  border:1px solid var(--line);
+  background:var(--white);
+  margin:10px 0;
+}
+
+.num {
+  width:48px;
+  height:48px;
+  border:2px solid var(--black);
+  background:var(--yellow);
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-weight:1000;
+}
+
+.check {
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  border:1px solid var(--line);
+  background:var(--yellow-soft);
+  border-radius:20px;
+  padding:14px;
+  margin:12px 0;
+}
+
+.check input {
+  width:22px;
+  height:22px;
+  margin-top:3px;
+}
+
+input, textarea, select {
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:14px;
+  font-size:16px;
+  margin:8px 0 12px;
+  background:var(--white);
+}
+
+label { font-weight:900; }
+
+.chat-box {
+  min-height:320px;
+  background:var(--blue-1);
+  border:1px solid var(--blue-3);
+  border-radius:22px;
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.bubble {
+  max-width:80%;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:var(--white);
+  padding:12px;
+  color:var(--black);
+}
+
+.bubble.me {
+  align-self:flex-end;
+  background:var(--yellow);
+}
+
+.video-box {
+  min-height:330px;
+  border-radius:26px;
+  border:1px solid var(--blue-4);
+  background:linear-gradient(135deg, var(--blue-2), var(--blue-5));
+  display:grid;
+  place-items:center;
+  text-align:center;
+  padding:24px;
+}
+
+.table {
+  width:100%;
+  border-collapse:collapse;
+  overflow:hidden;
+  border-radius:18px;
+}
+
+.table th, .table td {
+  text-align:left;
+  vertical-align:top;
+  padding:12px;
+  border-bottom:1px solid var(--line);
+}
+
+.table th { background:var(--yellow-soft); }
+
+.notice {
+  background:var(--yellow-soft);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:14px;
+  font-weight:800;
+}
+
+.footer {
+  text-align:center;
+  padding:30px 10px 84px;
+}
+
+.install-box {
+  display:none;
+  border:2px solid var(--black);
+  background:var(--yellow);
+  border-radius:22px;
+  padding:16px;
+  margin:14px 0;
+}
+
+.install-box.show { display:block; }
+
+.desktop-only-note, .mobile-only-note {
+  font-weight:900;
+}
+
+.mobile-only-note { display:none; }
+
+@media (max-width: 980px) {
+  .topbar {
+    align-items:flex-start;
+    flex-direction:column;
+  }
+  .nav {
+    justify-content:flex-start;
+  }
+  .hero {
+    grid-template-columns:1fr;
+  }
+  .visual-card {
+    min-height:auto;
+  }
+  .phone-screen {
+    min-height:500px;
+  }
+  .grid-3, .grid-2 {
+    grid-template-columns:1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    padding-bottom:76px;
+  }
+  .app-shell {
+    padding:10px;
+  }
+  .topbar {
+    top:6px;
+    border-radius:20px;
+    padding:10px;
+  }
+  .logo {
+    width:58px;
+    height:58px;
+  }
+  .brand-title {
+    font-size:30px;
+  }
+  .brand-subtitle {
+    font-size:12px;
+  }
+  .nav {
+    display:none;
+  }
+  .mobile-tabs {
+    display:grid;
+  }
+  h1 {
+    font-size:44px;
+    letter-spacing:-2px;
+  }
+  .panel {
+    border-radius:22px;
+    padding:18px;
+    margin:10px 0;
+  }
+  .actions {
+    flex-direction:column;
+  }
+  .actions button, .actions .btn {
+    width:100%;
+  }
+  .phone-preview {
+    border-radius:26px;
+    padding:8px;
+  }
+  .phone-screen {
+    min-height:460px;
+    border-radius:20px;
+  }
+  .desktop-only-note {
+    display:none;
+  }
+  .mobile-only-note {
+    display:block;
+  }
+}
+</style>
+</head>
+<body>
+<div class="app-shell">
+<header class="topbar">
+  <div class="brand">
+    <img class="logo" src="assets/app4match-icon-square-transparent.png" alt="App4Match logo">
+    <div>
+      <p class="brand-title">App4Match</p>
+      <p class="brand-subtitle">Psychometrische matching · chat · beeldbellen</p>
+    </div>
+  </div>
+  <nav class="nav" aria-label="Hoofdnavigatie">
+    <button onclick="showPage('home')">Home</button>
+    <button class="secondary" onclick="showPage('intake')">Intake</button>
+    <button class="secondary" onclick="showPage('matches')">Matches</button>
+    <button class="secondary" onclick="showPage('chat')">Chat</button>
+    <button class="secondary" onclick="showPage('video')">Video</button>
+    <button onclick="showPage('privacy')">Privacybeleid</button>
+  </nav>
+</header>
+
+<div id="installBox" class="install-box">
+  <strong>App4Match installeren?</strong>
+  <p>Op Android kun je deze web-app op je startscherm zetten. Gebruik Chrome: menu ⋮ → Toevoegen aan startscherm.</p>
+  <button id="installButton" class="dark" style="display:none">Installeer App4Match</button>
+</div>
+
+<section id="home" class="page active">
+  <div class="panel hero">
+    <div>
+      <span class="badge">Centrale web-app voor desktop, mobiel en evaluatie</span>
+      <h1>De match begint bij persoonlijkheid.</h1>
+      <p class="lead">App4Match gebruikt psychometrische vraagstelling tijdens de intake als basis voor het profiel van iedere gebruiker.</p>
+      <p>De app kijkt verder dan foto’s, leeftijd of oppervlakkige voorkeuren. Uit de intake ontstaan specifieke profieltypes met inzicht in communicatiestijl, waarden, emotionele behoeften, voorkeuren, gedragspatronen en relationele compatibiliteit.</p>
+      <p>Deze profielen kunnen helpen om veel dichter bij <strong>“de perfecte match”</strong> te komen. Dat maakt App4Match uniek en onderscheidend.</p>
+      <div class="notice">
+        <span class="desktop-only-note">Desktop: onderdelen staan breder en vaker naast elkaar.</span>
+        <span class="mobile-only-note">Mobiel: dezelfde app zet onderdelen automatisch onder elkaar.</span>
+      </div>
+      <div class="actions">
+        <button onclick="showPage('intake')">Start intake</button>
+        <button class="secondary" onclick="showPage('privacy')">Privacybeleid lezen</button>
+        <button class="dark" onclick="showPage('status')">Vervolgstappen</button>
+      </div>
+    </div>
+    <div class="visual-card">
+      <div class="phone-preview">
+        <div class="phone-screen">
+          <div class="phone-header">App4Match · slimme compatibiliteit</div>
+          <div class="match-card">
+            <h3>Persoonlijkheidsmatch <span class="score">94%</span></h3>
+            <div class="progress"><span style="width:94%"></span></div>
+            <p>Hoge compatibiliteit op communicatie, empathie en levenswaarden.</p>
+          </div>
+          <div class="match-card">
+            <h3>Psychologische balans <span class="score">89%</span></h3>
+            <div class="progress"><span style="width:89%"></span></div>
+            <p>Complementaire eigenschappen voor een stabiele connectie.</p>
+          </div>
+          <div class="match-card">
+            <h3>Privacy eerst</h3>
+            <p>Psychometrische gegevens worden alleen verwerkt met uitdrukkelijke toestemming.</p>
+            <button onclick="showPage('privacy')">Lees privacybeleid</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Wat maakt App4Match onderscheidend?</h2>
+    <div class="grid grid-3">
+      <div class="card"><h3>Diepe psychometrie</h3><p>De intake vormt een persoonlijkheidsprofiel op basis van antwoorden, voorkeuren en gedrag.</p></div>
+      <div class="card"><h3>Slimmere compatibiliteit</h3><p>Matches worden op meerdere psychologische dimensies beoordeeld.</p></div>
+      <div class="card"><h3>Zelflerende matching</h3><p>De psychometrie leert van feedback, interactie en resultaten en wordt steeds nauwkeuriger.</p></div>
+      <div class="card"><h3>Chat</h3><p>Een veilige basis voor contact tussen matches.</p></div>
+      <div class="card"><h3>Beeldbellen</h3><p>Camera en microfoon worden alleen gebruikt na toestemming.</p></div>
+      <div class="card"><h3>AVG-bewust</h3><p>Toestemming, transparantie en verwijderrechten zijn zichtbaar opgenomen.</p></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Hoe werkt de centrale web-app?</h2>
+    <div class="step"><div class="num">1</div><div><h3>Eén bron</h3><p>Je onderhoudt één centrale web-app. Die werkt op desktop, mobiel en als website.</p></div></div>
+    <div class="step"><div class="num">2</div><div><h3>Responsive layout</h3><p>Op desktop worden blokken naast elkaar gezet. Op mobiel worden dezelfde blokken automatisch onder elkaar geplaatst.</p></div></div>
+    <div class="step"><div class="num">3</div><div><h3>Installeren op Android</h3><p>Wanneer de app online staat, kan Android via Chrome de app toevoegen aan het startscherm.</p></div></div>
+    <div class="step"><div class="num">4</div><div><h3>Delen met anderen</h3><p>Publiceer de map op Wix, Netlify, GitHub Pages of eigen hosting en deel de link.</p></div></div>
+  </div>
+</section>
+
+<section id="intake" class="page">
+  <div class="panel">
+    <span class="badge">Psychometrische basis</span>
+    <h2>Intake en profielvorming</h2>
+    <p class="lead">De psychometrische vraagstelling is het fundament van App4Match.</p>
+    <p>In de uiteindelijke app beantwoorden gebruikers vragen over persoonlijkheid, communicatiestijl, emotionele behoeften, waarden, verwachtingen, sociale voorkeuren en relationele grenzen. Die antwoorden vormen samen het persoonlijke profiel.</p>
+    <div class="grid grid-2">
+      <div class="card"><h3>Communicatiestijl</h3><p>Hoe iemand praat, luistert, conflicten oplost en grenzen aangeeft.</p></div>
+      <div class="card"><h3>Waarden en doelen</h3><p>Wat iemand belangrijk vindt in relaties, vriendschap en toekomst.</p></div>
+      <div class="card"><h3>Emotionele behoeften</h3><p>De mate van nabijheid, veiligheid, ruimte, bevestiging en zelfstandigheid.</p></div>
+      <div class="card"><h3>Gedragspatronen</h3><p>Voorkeuren, terugkerende keuzes en interactiepatronen.</p></div>
+    </div>
+    <label class="check"><input id="consentPrivacy" type="checkbox"><span><strong>Ik ga akkoord met het privacybeleid.</strong><br>Het privacybeleid is altijd bereikbaar via de knop Privacybeleid.</span></label>
+    <label class="check"><input id="consentPsy" type="checkbox"><span><strong>Ik geef uitdrukkelijke toestemming voor psychometrische matching.</strong><br>Nodig voor persoonlijkheidsvragen, profieltypes en matchingscores.</span></label>
+    <button onclick="completeIntake()">Bekijk voorlopige matches</button>
+  </div>
+</section>
+
+<section id="matches" class="page">
+  <div class="panel">
+    <span class="badge">Demo-matchresultaten</span>
+    <h2>Voorlopige matches</h2>
+    <p>Deze demo toont hoe matchprofielen kunnen worden weergegeven op basis van psychometrische compatibiliteit.</p>
+    <div class="grid grid-3">
+      <div class="card"><h3>Profiel A <span class="score">94%</span></h3><div class="progress"><span style="width:94%"></span></div><p>Warm · communicatief · betrouwbaar. Sterke overlap in waarden en emotionele veiligheid.</p><button onclick="showPage('chat')">Chat starten</button></div>
+      <div class="card"><h3>Profiel B <span class="score">89%</span></h3><div class="progress"><span style="width:89%"></span></div><p>Nieuwsgierig · sociaal · stabiel. Goede balans tussen zelfstandigheid en betrokkenheid.</p><button onclick="showPage('chat')">Chat starten</button></div>
+      <div class="card"><h3>Profiel C <span class="score">84%</span></h3><div class="progress"><span style="width:84%"></span></div><p>Rustig · empathisch · direct. Complementaire eigenschappen met ruimte voor groei.</p><button onclick="showPage('video')">Beeldbel-demo</button></div>
+    </div>
+  </div>
+</section>
+
+<section id="chat" class="page">
+  <div class="panel">
+    <h2>Chat-demo</h2>
+    <p>Voorbeeld van veilige communicatie tussen matches.</p>
+    <div id="chatBox" class="chat-box">
+      <div class="bubble">Hoi! Leuk dat we via App4Match gekoppeld zijn.</div>
+      <div class="bubble me">Ik ben benieuwd waarom onze match zo hoog is.</div>
+      <div class="bubble">De demo laat overeenkomst zien in communicatie, waarden en emotionele voorkeur.</div>
+    </div>
+    <input id="chatInput" placeholder="Typ een bericht..." onkeydown="if(event.key==='Enter') sendMessage()">
+    <button onclick="sendMessage()">Verstuur</button>
+  </div>
+</section>
+
+<section id="video" class="page">
+  <div class="panel">
+    <h2>Beeldbellen</h2>
+    <p>Voor beeldbellen vraagt App4Match apart toestemming voor camera en microfoon. Videobeelden worden niet standaard opgeslagen.</p>
+    <div class="video-box">
+      <div>
+        <div style="font-size:64px">🎥</div>
+        <h3>Beveiligde beeldbel-preview</h3>
+        <p>Demo-weergave. Echte video vereist integratie met een videoprovider.</p>
+      </div>
+    </div>
+    <label class="check"><input type="checkbox"><span><strong>Ik geef toestemming voor camera en microfoon.</strong><br>Alleen gebruikt wanneer je een gesprek start of accepteert.</span></label>
+  </div>
+</section>
+
+<section id="privacy" class="page">
+  <div class="panel">
+    <span class="badge">AVG / GDPR</span>
+    <h2>Privacybeleid App4Match</h2>
+    <p><strong>Laatst bijgewerkt:</strong> 25 mei 2026</p>
+    <p>App4Match van Georg Melching, gevestigd te Leeuwarden, hecht veel waarde aan de bescherming van persoonsgegevens. Dit privacybeleid legt uit hoe App4Match gegevens verwerkt voor psychometrische matching, chat en beeldbellen.</p>
+
+    <h3>1. Verwerkingsverantwoordelijke</h3>
+    <p>Appnaam: App4Match<br>Eigenaar: App4Match van Georg Melching<br>Vestigingsplaats: Leeuwarden<br>KvK-nummer: Nog niet bekend<br>Privacycontact: g.melching1967@gmail.com<br>Support: app4match@gmail.com<br>Website: app4match.wixsite.com/mijnsite</p>
+
+    <h3>2. Welke gegevens verwerken wij?</h3>
+    <ul>
+      <li>Accountgegevens: naam, e-mailadres, geboortedatum, profielfoto en instellingen.</li>
+      <li>Psychometrische gegevens: antwoorden, persoonlijkheidsscores, profieltypes, voorkeuren en matchingscores.</li>
+      <li>Communicatiegegevens: chatberichten, appberichten, e-mails via de app en supportcommunicatie.</li>
+      <li>Beeldbelgegevens: metadata zoals datum, duur, verbindingskwaliteit en foutmeldingen.</li>
+      <li>Technische gegevens: IP-adres, apparaat-ID, app-versie, besturingssysteem, crashlogs en beveiligingslogs.</li>
+    </ul>
+
+    <h3>3. Waarom verwerken wij gegevens?</h3>
+    <ul>
+      <li>Voor accountbeheer en toegang tot de app.</li>
+      <li>Voor psychometrische profielvorming en matching.</li>
+      <li>Voor chat, meldingen en beeldbellen.</li>
+      <li>Voor beveiliging, misbruikpreventie en technische verbetering.</li>
+      <li>Voor klantenservice en wettelijke verplichtingen.</li>
+    </ul>
+
+    <h3>4. AVG-grondslagen</h3>
+    <table class="table">
+      <thead><tr><th>Verwerking</th><th>Grondslag</th></tr></thead>
+      <tbody>
+        <tr><td>Accountregistratie</td><td>Uitvoering van de overeenkomst</td></tr>
+        <tr><td>Chat en beeldbellen</td><td>Uitvoering van de overeenkomst</td></tr>
+        <tr><td>Psychometrische vragenlijsten en matching</td><td>Uitdrukkelijke toestemming</td></tr>
+        <tr><td>Beveiliging en misbruikpreventie</td><td>Gerechtvaardigd belang</td></tr>
+        <tr><td>Wettelijke administratie</td><td>Wettelijke verplichting</td></tr>
+      </tbody>
+    </table>
+
+    <h3>5. Psychometrische gegevens</h3>
+    <p>Psychometrische gegevens kunnen gevoelige informatie bevatten over persoonlijkheid, voorkeuren en gedrag. Daarom vraagt App4Match afzonderlijke en uitdrukkelijke toestemming voordat deze gegevens worden verwerkt.</p>
+
+    <h3>6. Camera, microfoon en beeldbellen</h3>
+    <p>Voor beeldbellen vraagt de app apart toestemming voor camera en microfoon. Deze toegang wordt alleen gebruikt wanneer je actief een gesprek start of accepteert.</p>
+
+    <h3>7. Delen met derden</h3>
+    <p>App4Match verkoopt persoonsgegevens nooit. Gegevens kunnen alleen worden gedeeld met technische dienstverleners en wettelijke instanties wanneer dit verplicht is. Met verwerkers worden verwerkersovereenkomsten gesloten conform de AVG.</p>
+
+    <h3>8. Beveiliging</h3>
+    <ul>
+      <li>HTTPS/TLS voor beveiligde verbindingen.</li>
+      <li>Versleutelde opslag waar passend.</li>
+      <li>Beperkte beheerderstoegang.</li>
+      <li>Logging en monitoring van verdachte activiteiten.</li>
+      <li>Periodieke beveiligingsupdates.</li>
+    </ul>
+
+    <h3>9. Bewaartermijnen</h3>
+    <ul>
+      <li>Accountgegevens: zolang het account actief is.</li>
+      <li>Psychometrische gegevens: tot verwijdering van het account of intrekking van toestemming.</li>
+      <li>Chatberichten: maximaal 12 maanden.</li>
+      <li>Beeldbelmetadata: maximaal 6 maanden.</li>
+      <li>Technische logs: maximaal 90 dagen.</li>
+    </ul>
+
+    <h3>10. Jouw privacyrechten</h3>
+    <p>Je hebt recht op inzage, correctie, verwijdering, beperking van verwerking, bezwaar, gegevensoverdracht en intrekking van toestemming. Voor verzoeken kun je mailen naar g.melching1967@gmail.com.</p>
+    <div class="actions">
+      <a class="btn secondary" href="mailto:g.melching1967@gmail.com?subject=AVG-verzoek inzage persoonsgegevens">Gegevens opvragen</a>
+      <a class="btn secondary" href="mailto:g.melching1967@gmail.com?subject=AVG-verzoek verwijdering account en gegevens">Gegevens verwijderen</a>
+    </div>
+
+    <h3>11. Minderjarigen</h3>
+    <p>App4Match is bedoeld voor gebruikers van 18 jaar en ouder. Wij verzamelen niet bewust persoonsgegevens van minderjarigen.</p>
+
+    <h3>12. Wijzigingen</h3>
+    <p>Dit privacybeleid kan worden gewijzigd. De meest actuele versie is altijd beschikbaar binnen de app.</p>
+  </div>
+</section>
+
+<section id="status" class="page">
+  <div class="panel">
+    <span class="badge">Uitgevoerde vervolgstappen</span>
+    <h2>Wat is nu gerealiseerd?</h2>
+    <div class="grid grid-2">
+      <div class="card"><h3>Desktop</h3><p>De web-app werkt op pc/laptop in de browser met brede layout.</p></div>
+      <div class="card"><h3>Mobiel</h3><p>Dezelfde app past zich automatisch aan kleinere schermen aan.</p></div>
+      <div class="card"><h3>Website</h3><p>De map is uploadbaar naar hosting als publieke demo-site.</p></div>
+      <div class="card"><h3>PWA</h3><p>Met manifest en service worker voor toevoegen aan startscherm.</p></div>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>Nog nodig voor livegang</h2>
+    <ul>
+      <li>Online publiceren via Wix, Netlify, GitHub Pages of eigen hosting.</li>
+      <li>Backend koppelen voor accounts, intake, matches, chat en video.</li>
+      <li>Database en beveiligde opslag implementeren.</li>
+      <li>DPIA uitvoeren vanwege psychometrische gegevens.</li>
+      <li>Verwerkersovereenkomsten afsluiten.</li>
+      <li>Account verwijderen, data-export en toestemming intrekken als echte functies bouwen.</li>
+      <li>Later eventueel echte Android-app/APK maken.</li>
+    </ul>
+  </div>
+</section>
+
+<footer class="footer">
+  <img src="assets/app4match-icon-square-transparent.png" alt="" style="width:64px;height:64px;object-fit:contain">
+  <p><strong>App4Match</strong> · Psychometrische matching · Privacybewust · Zelflerend systeem</p>
+</footer>
+</div>
+
+<nav class="mobile-tabs" aria-label="Mobiele navigatie">
+  <button onclick="showPage('home')">Home</button>
+  <button onclick="showPage('intake')">Intake</button>
+  <button onclick="showPage('matches')">Match</button>
+  <button onclick="showPage('chat')">Chat</button>
+  <button onclick="showPage('privacy')">Privacy</button>
+</nav>
+
+<script>
+let deferredPrompt = null;
+
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(page => page.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  history.replaceState(null, "", "#" + id);
+}
+
+function completeIntake() {
+  const privacy = document.getElementById("consentPrivacy").checked;
+  const psy = document.getElementById("consentPsy").checked;
+  if (!privacy || !psy) {
+    alert("Vink eerst het privacybeleid en de toestemming voor psychometrische matching aan.");
+    return;
+  }
+  showPage("matches");
+}
+
+function sendMessage() {
+  const input = document.getElementById("chatInput");
+  const text = input.value.trim();
+  if (!text) return;
+  const box = document.getElementById("chatBox");
+  const mine = document.createElement("div");
+  mine.className = "bubble me";
+  mine.textContent = text;
+  box.appendChild(mine);
+  input.value = "";
+  setTimeout(() => {
+    const reply = document.createElement("div");
+    reply.className = "bubble";
+    reply.textContent = "Demo-antwoord: in de echte app loopt dit via een beveiligde chatserver.";
+    box.appendChild(reply);
+  }, 400);
+}
+
+window.addEventListener("load", () => {
+  const id = location.hash.replace("#", "");
+  if (id && document.getElementById(id)) showPage(id);
+
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if (isMobile) document.getElementById("installBox").classList.add("show");
+
+  if ("serviceWorker" in navigator && location.protocol !== "file:") {
+    navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+  }
+});
+
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredPrompt = event;
+  const installBox = document.getElementById("installBox");
+  const button = document.getElementById("installButton");
+  installBox.classList.add("show");
+  button.style.display = "inline-flex";
+  button.onclick = async () => {
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    button.style.display = "none";
+  };
+});
+</script>
+</body>
+</html>

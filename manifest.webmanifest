@@ -1,0 +1,23 @@
+{
+  "name": "App4Match",
+  "short_name": "App4Match",
+  "description": "Centrale App4Match web-app voor desktop, mobiel en evaluatie.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fffde3",
+  "theme_color": "#f2ef12",
+  "icons": [
+    {
+      "src": "assets/app4match-icon-square-transparent.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/app4match-icon-square-transparent.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
