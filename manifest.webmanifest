@@ -1,7 +1,7 @@
 {
   "name": "App4Match",
   "short_name": "App4Match",
-  "description": "Centrale App4Match web-app voor desktop, mobiel en evaluatie.",
+  "description": "App4Match centrale web-app: psychometrische matching, chat, beeldbellen en privacybeleid.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -10,13 +10,18 @@
   "theme_color": "#f2ef12",
   "icons": [
     {
-      "src": "assets/app4match-icon-square-transparent.png",
+      "src": "assets/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "assets/app4match-icon-square-transparent.png",
+      "src": "assets/icon-512.png",
       "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icon-1024.png",
+      "sizes": "1024x1024",
       "type": "image/png"
     }
   ]

@@ -1,40 +1,55 @@
-APP4MATCH CENTRALE WEB-APP / PWA
+APP4MATCH – VOLLEDIGE BRANDING UPDATE
 
-Dit pakket bevat één centrale web-app die automatisch werkt als:
-1. Desktopversie
-2. Mobiele web-app / PWA
-3. Website-demo voor anderen
+Uitgevoerd:
+1. Definitief App4Match-icoon verwerkt.
+2. Header-logo verwerkt.
+3. Tagline toegevoegd: "App4Match, een pre voor een zonzijde".
+4. Favicon toegevoegd.
+5. PWA manifest bijgewerkt.
+6. Splashscreen toegevoegd.
+7. service-worker bijgewerkt.
+8. app.json toegevoegd voor Expo/Android later.
+9. index.html bijgewerkt voor desktop en mobiel.
 
-STARTEN OP PC
-1. Pak de ZIP uit.
-2. Dubbelklik op START_APP4MATCH.html of index.html.
+Lokaal testen:
+- Dubbelklik op START_APP4MATCH.html of index.html.
 
-MOBIEL TESTEN
-De mobiele versie is dezelfde app, maar responsive.
-Zet de map online en open de link op Android.
-In Chrome: menu ⋮ > Toevoegen aan startscherm.
+GitHub Pages updaten:
+1. Ga naar GitHub > App4Match > Code.
+2. Upload/vervang de inhoud van deze map in de ROOT van de repository:
+   - index.html
+   - START_APP4MATCH.html
+   - manifest.webmanifest
+   - service-worker.js
+   - app.json
+   - assets/
+   - README_EERST_LEZEN.txt
+3. Commit changes.
+4. Wacht 1 minuut.
+5. Open: https://georgmelching.github.io/App4Match/
 
-ONLINE ZETTEN
-Upload de volledige inhoud van deze map naar:
-- Wix, als HTML/embed of via een downloadbare site-omgeving;
-- Netlify Drop;
-- GitHub Pages;
-- eigen hosting.
+Mobiel:
+- Open de GitHub Pages link op Android.
+- Chrome menu ⋮ > Toevoegen aan startscherm.
 
-BESTANDEN
-- index.html = centrale app
-- START_APP4MATCH.html = snelstarter
-- manifest.webmanifest = PWA-configuratie
-- service-worker.js = offline/PWA-basis
-- assets/ = logo en afbeeldingen
 
-BELANGRIJK
-Voor een echte live-app zijn nog nodig:
-- backend;
-- accountregistratie;
-- database;
-- echte beveiligde chat;
-- echte videobelprovider;
-- AVG-DPIA;
-- verwerkersovereenkomsten;
-- juridische controle.
+UPDATE: IDEE DOORGEVEN-KNOP
+Toegevoegd:
+- vaste zwevende knop "+ Idee";
+- pagina "Idee doorgeven";
+- tekst plakken/typen;
+- lokaal bewaren op apparaat;
+- kopiëren voor ChatGPT;
+- delen via mobiel;
+- mailen naar app4match@gmail.com;
+- exporteren als tekstbestand.
+
+Let op:
+De huidige versie bewaart lokaal in de browser. Voor echte synchronisatie tussen mobiel, pc en overal online is later een beveiligde backend nodig.
+Aanbevolen later:
+- Supabase/Firebase database;
+- login;
+- pincode/patroon;
+- biometrische ontgrendeling via apparaat;
+- versleutelde opslag;
+- koppeling naar admin-dashboard.

@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#f2ef12">
 <meta name="description" content="App4Match centrale web-app: psychometrische matching, chat, beeldbellen en privacybeleid.">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/favicon.png">
 <title>App4Match</title>
 <style>
 :root {
@@ -136,7 +137,7 @@ button.dark, .btn.dark {
   background:rgba(255,255,255,.96);
   border-top:1px solid var(--line);
   padding:8px 8px max(8px, env(safe-area-inset-bottom));
-  grid-template-columns:repeat(5,1fr);
+  grid-template-columns:repeat(6,1fr);
   gap:6px;
 }
 
@@ -514,17 +515,94 @@ label { font-weight:900; }
     display:block;
   }
 }
+
+.brand-updated {
+  flex-direction:column;
+  align-items:flex-start;
+  gap:8px;
+}
+.header-logo {
+  width:min(560px, 68vw);
+  max-height:92px;
+  object-fit:contain;
+  display:block;
+}
+.brand-tagline {
+  margin:0 0 0 8px;
+  font-size:clamp(14px, 1.7vw, 20px);
+  font-weight:900;
+  color:var(--black);
+  letter-spacing:.1px;
+}
+@media (max-width:640px) {
+  .brand-updated {
+    align-items:center;
+    width:100%;
+  }
+  .header-logo {
+    width:min(92vw, 430px);
+    max-height:76px;
+  }
+  .brand-tagline {
+    text-align:center;
+    margin:0;
+    font-size:14px;
+  }
+}
+
+
+.floating-idea-button {
+  position:fixed;
+  right:18px;
+  bottom:92px;
+  z-index:130;
+  box-shadow:0 14px 34px rgba(0,0,0,.22);
+}
+.idea-tools {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.idea-status {
+  margin-top:10px;
+  font-weight:900;
+  color:var(--black);
+}
+.saved-ideas {
+  display:grid;
+  gap:10px;
+  margin-top:16px;
+}
+.saved-idea {
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:var(--yellow-soft);
+  padding:12px;
+}
+.saved-idea small {
+  display:block;
+  font-weight:900;
+  margin-bottom:6px;
+}
+@media (max-width:640px) {
+  .floating-idea-button {
+    right:12px;
+    bottom:82px;
+    padding:10px 12px;
+    font-size:13px;
+  }
+}
+
 </style>
 </head>
 <body>
+<button class="floating-idea-button dark" onclick="showPage('ideas')">＋ Idee</button>
 <div class="app-shell">
 <header class="topbar">
-  <div class="brand">
-    <img class="logo" src="assets/app4match-icon-square-transparent.png" alt="App4Match logo">
-    <div>
-      <p class="brand-title">App4Match</p>
-      <p class="brand-subtitle">Psychometrische matching · chat · beeldbellen</p>
-    </div>
+  <div class="brand brand-updated">
+    <img class="header-logo" src="assets/header-logo.png" alt="App4Match">
+    <p class="brand-tagline">App4Match, een pre voor een zonzijde</p>
   </div>
   <nav class="nav" aria-label="Hoofdnavigatie">
     <button onclick="showPage('home')">Home</button>
@@ -533,6 +611,7 @@ label { font-weight:900; }
     <button class="secondary" onclick="showPage('chat')">Chat</button>
     <button class="secondary" onclick="showPage('video')">Video</button>
     <button onclick="showPage('privacy')">Privacybeleid</button>
+    <button class="dark" onclick="showPage('ideas')">Idee doorgeven</button>
   </nav>
 </header>
 
@@ -747,6 +826,43 @@ label { font-weight:900; }
   </div>
 </section>
 
+
+<section id="ideas" class="page">
+  <div class="panel">
+    <span class="badge">Snel iets vastleggen</span>
+    <h2>Idee doorgeven aan App4Match</h2>
+    <p class="lead">Typ of plak hier direct een idee, tekst, link of online gevonden fragment dat later verwerkt moet worden.</p>
+    <p>Deze voorlopige versie bewaart je invoer lokaal in deze browser. Je kunt de tekst ook meteen kopiëren, delen via je telefoon, of mailen naar het App4Match-adres. Later kan dit beveiligd worden met vingerafdruk, patroon, pincode en een persoonlijke backend.</p>
+
+    <label for="ideaTitle">Korte titel</label>
+    <input id="ideaTitle" placeholder="Bijvoorbeeld: nieuw idee voor intakevragen">
+
+    <label for="ideaText">Tekst / idee / gekopieerde online tekst</label>
+    <textarea id="ideaText" rows="10" placeholder="Plak of typ hier alles wat je niet wilt vergeten..."></textarea>
+
+    <div class="idea-tools">
+      <button onclick="saveIdea()">Lokaal bewaren</button>
+      <button class="secondary" onclick="copyIdea()">Kopieer voor ChatGPT</button>
+      <button class="secondary" onclick="shareIdea()">Delen op mobiel</button>
+      <button class="secondary" onclick="mailIdea()">Mail naar App4Match</button>
+      <button class="dark" onclick="exportIdeas()">Exporteer ideeën</button>
+    </div>
+    <p id="ideaStatus" class="idea-status"></p>
+
+    <div class="notice" style="margin-top:18px">
+      Toekomstige beveiligde versie: login, vingerafdruk/gezichtsherkenning, patroon of pincode, versleutelde opslag en synchronisatie zodat ideeën overal up-to-date blijven.
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Bewaarde ideeën op dit apparaat</h2>
+    <p>Deze lijst staat nu lokaal op dit apparaat. Voor echte synchronisatie tussen pc en mobiel is later een beveiligde database nodig.</p>
+    <div id="savedIdeas" class="saved-ideas"></div>
+    <button class="secondary" onclick="loadIdeas()">Ververs lijst</button>
+    <button class="secondary" onclick="clearIdeas()">Wis lokale ideeën</button>
+  </div>
+</section>
+
 <section id="status" class="page">
   <div class="panel">
     <span class="badge">Uitgevoerde vervolgstappen</span>
@@ -773,8 +889,7 @@ label { font-weight:900; }
 </section>
 
 <footer class="footer">
-  <img src="assets/app4match-icon-square-transparent.png" alt="" style="width:64px;height:64px;object-fit:contain">
-  <p><strong>App4Match</strong> · Psychometrische matching · Privacybewust · Zelflerend systeem</p>
+  <img src="assets/header-logo.png" alt="App4Match" style="max-width:420px;width:80%;height:auto;object-fit:contain"><p><strong>App4Match, een pre voor een zonzijde</strong></p>
 </footer>
 </div>
 
@@ -784,6 +899,7 @@ label { font-weight:900; }
   <button onclick="showPage('matches')">Match</button>
   <button onclick="showPage('chat')">Chat</button>
   <button onclick="showPage('privacy')">Privacy</button>
+  <button onclick="showPage('ideas')">Idee</button>
 </nav>
 
 <script>
@@ -794,6 +910,7 @@ function showPage(id) {
   document.getElementById(id).classList.add("active");
   window.scrollTo({ top: 0, behavior: "smooth" });
   history.replaceState(null, "", "#" + id);
+  if (id === "ideas") setTimeout(loadIdeas, 50);
 }
 
 function completeIntake() {
@@ -850,6 +967,130 @@ window.addEventListener("beforeinstallprompt", (event) => {
     button.style.display = "none";
   };
 });
+
+function ideaPayload() {
+  const title = document.getElementById("ideaTitle")?.value.trim() || "App4Match idee";
+  const text = document.getElementById("ideaText")?.value.trim() || "";
+  const date = new Date().toLocaleString("nl-NL");
+  return { title, text, date };
+}
+
+function setIdeaStatus(msg) {
+  const el = document.getElementById("ideaStatus");
+  if (el) el.textContent = msg;
+}
+
+function saveIdea() {
+  const item = ideaPayload();
+  if (!item.text) {
+    setIdeaStatus("Typ of plak eerst een idee.");
+    return;
+  }
+  const ideas = JSON.parse(localStorage.getItem("app4matchIdeas") || "[]");
+  ideas.unshift(item);
+  localStorage.setItem("app4matchIdeas", JSON.stringify(ideas));
+  setIdeaStatus("Idee lokaal bewaard op dit apparaat.");
+  document.getElementById("ideaText").value = "";
+  document.getElementById("ideaTitle").value = "";
+  loadIdeas();
+}
+
+async function copyIdea() {
+  const item = ideaPayload();
+  const content = `Titel: ${item.title}\nDatum: ${item.date}\n\n${item.text}`;
+  if (!item.text) {
+    setIdeaStatus("Typ of plak eerst een idee.");
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(content);
+    setIdeaStatus("Gekopieerd. Plak dit nu in ChatGPT of ergens anders.");
+  } catch {
+    setIdeaStatus("Kopiëren lukte niet automatisch. Selecteer de tekst handmatig.");
+  }
+}
+
+async function shareIdea() {
+  const item = ideaPayload();
+  const content = `App4Match idee\n\nTitel: ${item.title}\nDatum: ${item.date}\n\n${item.text}`;
+  if (!item.text) {
+    setIdeaStatus("Typ of plak eerst een idee.");
+    return;
+  }
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: item.title, text: content });
+      setIdeaStatus("Delen geopend.");
+    } catch {
+      setIdeaStatus("Delen geannuleerd.");
+    }
+  } else {
+    await copyIdea();
+    setIdeaStatus("Delen wordt niet ondersteund; tekst is gekopieerd.");
+  }
+}
+
+function mailIdea() {
+  const item = ideaPayload();
+  if (!item.text) {
+    setIdeaStatus("Typ of plak eerst een idee.");
+    return;
+  }
+  const subject = encodeURIComponent("App4Match idee: " + item.title);
+  const body = encodeURIComponent(`Datum: ${item.date}\n\n${item.text}`);
+  window.location.href = `mailto:app4match@gmail.com?subject=${subject}&body=${body}`;
+}
+
+function loadIdeas() {
+  const box = document.getElementById("savedIdeas");
+  if (!box) return;
+  const ideas = JSON.parse(localStorage.getItem("app4matchIdeas") || "[]");
+  if (!ideas.length) {
+    box.innerHTML = "<p>Nog geen lokale ideeën bewaard.</p>";
+    return;
+  }
+  box.innerHTML = ideas.map((item, index) => `
+    <div class="saved-idea">
+      <small>${item.date} · ${item.title}</small>
+      <div>${String(item.text).replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>")}</div>
+      <div class="idea-tools">
+        <button class="secondary" onclick="reuseIdea(${index})">Opnieuw openen</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function reuseIdea(index) {
+  const ideas = JSON.parse(localStorage.getItem("app4matchIdeas") || "[]");
+  const item = ideas[index];
+  if (!item) return;
+  showPage("ideas");
+  setTimeout(() => {
+    document.getElementById("ideaTitle").value = item.title || "";
+    document.getElementById("ideaText").value = item.text || "";
+  }, 50);
+}
+
+function clearIdeas() {
+  if (confirm("Alle lokale ideeën op dit apparaat wissen?")) {
+    localStorage.removeItem("app4matchIdeas");
+    loadIdeas();
+    setIdeaStatus("Lokale ideeën gewist.");
+  }
+}
+
+function exportIdeas() {
+  const ideas = JSON.parse(localStorage.getItem("app4matchIdeas") || "[]");
+  const text = ideas.map(i => `# ${i.title}\nDatum: ${i.date}\n\n${i.text}`).join("\n\n---\n\n");
+  const blob = new Blob([text || "Geen ideeën opgeslagen."], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "app4match-ideeen.txt";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 </script>
 </body>
 </html>
